@@ -72,8 +72,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'reviewclinic.wsgi.application'
-
-
+STATIC_ROOT = "/home/ssklqk/reviewclinic/static"
+os.path.join(BASE_DIR, "static")
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
