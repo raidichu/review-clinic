@@ -1,0 +1,169 @@
+{% extends "base/base.html" %}
+{% block title %}
+{{ clinic.name }}
+{% endblock %}
+{% block content %}
+{% include "base/comment-modal.html" %}
+{% include "base/reply-modal.html" %}
+{% load my_teamplate_extra %}
+<main class="container " style="margin-top: 62px; padding: 0px;">
+    <nav aria-label="breadcrumb" class="mx-0 p-md-0 pt-5 px-0">
+        <ol class="breadcrumb m-0">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}"><i class="fa fa-home" aria-hidden="true"></i> Trang
+                chủ</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Review phòng khám {{clinic.name}}</li>
+        </ol>
+    </nav>
+    <div class="row align-items-center mx-0 px-0 mt-2 " style="background-color: #eaedf2;">
+        <div class="col-md-9 mx-0">
+            <div class="media align-items-center">
+                <img src="https://montana.vn/wp-content/uploads/2018/11/a3-1-4-800x813.png" class="mr-3 "
+                     style="width: 10%;" alt="...">
+                <div class="media-body">
+                    <h5 class="mt-0">{{clinic.name}}     {% autoescape off %} {{clinic.printStar}} {% endautoescape %} </h5>
+                    <p class="p-0 m-0">Loại Phòng khám: {{clinic.type}}</p>
+                    <p class="p-0 m-0">Địa chỉ : {{clinic.address}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 text-right">
+            <button type="button" id="btnReviewModal" class="btn btn-success" style="border-radius: 48px;">
+                Viết Review
+            </button>
+
+        </div>
+
+    </div>
+     {% if listComment.paginator.num_pages > 1 %}
+    <nav aria-label="Page navigation example" class="mt-3 pl-2">
+        <ul class="pagination justify-content-center justify-content-md-start">
+            <li class="page-item ">
+                {% if listComment.has_previous %}
+                <a class="page-link" href="?page={{ list.previous_page_number }}"> <span aria-hidden="true">&laquo;</span></a>
+                {% endif %}
+            </li>
+            {% for num in listComment.paginator.page_range %}
+            {% ifequal num listComment.number %}
+            <li class="page-item active"><a class="page-link" href="#">{{ num }}<span class="sr-only">(current)</span></a></li>
+            {% else %}
+            <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+            {% endifequal %}
+            {% endfor %}
+            <li class="page-item">
+                {% if listComment.has_next %}
+                <a class="page-link" href="?page={{ list.next_page_number }}"><span aria-hidden="true">&raquo;</span></a>
+                {% endif %}
+            </li>
+        </ul>
+    </nav>
+    {% endif %}
+    {% for item in listComment %}
+    <div class="row  my-3 justify-content-center ">
+        <div class="col-md-12 px-3">
+            <div class="card shadow w-100">
+                <div class="card-header bg-white">
+                <span class="font-weight-bold">
+               {{item.name}} ({{item.level}})
+            </span>
+                    {% autoescape off %}{{ item.printStar }}{% endautoescape %}
+                    <span class="pull-right">{{item.get_date}}</span>
+                    <span class="pull-right text-primary mr-2"><i class="fa fa-share-alt"
+                                                                  aria-hidden="true"></i> Share</span>
+
+                </div>
+                <div class="card-body pb-0">
+                    <p class="card-text">{{item.content}}</p>
+                    <div class="card-footer pt-0 border-bottom bg-white">
+                        <div class="row align-items-center text-center ">
+                            <div class="col px-0 ">
+                            <span  class="d-block border-right py-2  text-primary">
+                                <a data-status="1" data-reaction="" data-id="{{item.id}}" class="btnReply" href="javascript:void(0)"><i class="fa fa-comment" aria-hidden="true"></i> Reply</a></span>
+                            </div>
+                            <div class="col px-0">
+                            <span  class="border-right d-block py-2  "> <span> </span>{% get_status item.id 1 %}
+                                <a data-status="1" data-reaction="Bác nói chuẩn vãi cho 1 like"  data-id="{{item.id}}" class="btnReply" href="javascript:void(0)"> <i class="fa fa-thumbs-up text-success" aria-hidden="true"></i></a>
+                           </span>
+                            </div>
+                            <div class="col px-0">
+                                <span  class=" d-block py-2   border-right"><span></span>{% get_status item.id 2 %}
+                                    <a data-status="2" data-reaction="Review nhảm nhỉ, móe like"  data-id="{{item.id}}" href="javascript:void(0)" class="btnReply"> <i
+                                        class="fa fa-thumbs-down text-danger" aria-hidden="true"></i></a></span>
+                            </div>
+                            <div class="col px-0">
+                                <span  class=" d-block py-2  text-mute">{% get_status item.id 3 %}
+                                    <a data-status="3" data-reaction="Xóa review này dùm"  data-id="{{item.id}}" href="javascript:void(0)" class="btnReply"><i
+                                        class="fa fa-trash" aria-hidden="true"></i> Xóa dùm</a> </span>
+                            </div>
+                        </div>
+
+                        {% for reply in item.replies %}
+                        <div class="row border-top ">
+                            <div class="col pt-2">
+                                <span class="font-weight-bold">{{reply.name}} </span>    {% autoescape off %}{{ reply.get_reaction }}{% endautoescape %}
+                                <span> {{ reply.get_date }}</span>
+                                <p class="mb-1">{{reply.content}}</p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <p>Chưa có review nào hết, bạn viết review đi nào hihi!</p>
+    {% endfor %}
+    {% if listComment.paginator.num_pages > 1 %}
+    <nav aria-label="Page navigation example" class="mt-3 pl-2">
+        <ul class="pagination justify-content-center justify-content-md-start">
+            <li class="page-item ">
+                {% if listComment.has_previous %}
+                <a class="page-link" href="?page={{ list.previous_page_number }}"> <span aria-hidden="true">&laquo;</span></a>
+                {% endif %}
+            </li>
+            {% for num in listComment.paginator.page_range %}
+            {% ifequal num listComment.number %}
+            <li class="page-item active"><a class="page-link" href="#">{{ num }}<span class="sr-only">(current)</span></a></li>
+            {% else %}
+            <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+            {% endifequal %}
+            {% endfor %}
+            <li class="page-item">
+                {% if listComment.has_next %}
+                <a class="page-link" href="?page={{ list.next_page_number }}"><span aria-hidden="true">&raquo;</span></a>
+                {% endif %}
+            </li>
+        </ul>
+    </nav>
+    {% endif %}
+</main>
+<script>
+    let status = '1'
+    $('#btnReviewModal').on('click',function(){
+
+        $('#reviewModal').modal('show');
+    })
+
+    $('#replyModal').on('hidden.bs.modal', function (e) {
+           $('.selectStatus').val('1')
+    })
+
+
+
+    $('.btnReply').on('click',function(){
+            let id = $(this).data('id')
+            status = $(this).data('status')
+            let reaction =  $(this).data('reaction')
+            $('.comment-id').val(id)
+            $('.replyContent').val(reaction)
+        $('#replyModal').modal('show')
+    })
+
+     $('#replyModal').on('show.bs.modal', function (e) {
+           $('.selectStatus').val(status)
+    })
+
+
+
+</script>
+{% endblock %}

@@ -1,0 +1,96 @@
+{% extends "base/base.html" %}
+{% block title %}
+   {{ 'phòng khám' }}
+{% endblock %}
+{% block content %}
+
+
+<main class="container mb-3 " style="margin-top: 62px; ">
+
+    <div class="row">
+        <div class="col-md-12 ">
+        <div class="row py-5 bg-dark text-white">
+                <div class="col-md-12">
+                    <h2 class="pl-3">Review phòng khám trên toàn quốc bla bla bla</h2>
+                    <div class="col-md-12">
+                            <form action="{% url 'home' %}" method="get" class="w-100">
+                                  <div class="input-group mb-2 mt-5">
+                                     <div class="input-group-prepend">
+                                            <span class="input-group-text bg-white" id="basic-addon1"><i class="fa fa-search" aria-hidden="true"></i></span>
+                                     </div>
+                                            <input type="text" name="keyword" class="form-control" placeholder="Some text" aria-label="sometext" aria-describedby="basic-addon1">
+                                  </div>
+                            </form>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-2 ">
+                <div class="col-md-7 px-0">
+                    <div class="card shadow" >
+                        <div class="card-body">
+                            {% for clinic in list %}
+                            <a href="{% url 'viewreview' clinic_id=clinic.id %}" class="text-decoration-none text-dark">
+                                <div class="row company ">
+                                    <div class="col">
+                                        <div class="media align-items-center">
+                                            <img src="https://montana.vn/wp-content/uploads/2018/11/a3-1-4-800x813.png"
+                                                 class="mr-3 " style="width: 20%;" alt="...">
+                                            <div class="media-body">
+                                                <h5 class="mt-0">{{ clinic.name }}  {% autoescape off %} {{clinic.printStar}} {% endautoescape %}
+                                                    <span style="font-size:15px;">({{clinic.number_comment}})</span> </h5>
+                                                <p class="p-0 m-0"><i class="fa fa-briefcase" aria-hidden="true"></i> Loại công ty : {{ clinic.type }} <i class="fa fa-users" aria-hidden="true"></i>    {{clinic.scale}}</p>
+                                                <p class="p-0 m-0"><i class="fa fa-building" aria-hidden="true"></i> Địa chỉ : {{ clinic.address }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                            {% endfor %}
+                        </div>
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination justify-content-center">
+                                <li class="page-item ">
+                                     {% if list.has_previous %}
+                                        <a class="page-link" href="?page={{ list.previous_page_number }}"><<</a>
+                                     {% endif %}
+                                </li>
+                                {% for num in list.paginator.page_range %}
+                                  {% ifequal num list.number %}
+                                    <li class="page-item active"><a class="page-link" href="#">{{ num }}<span class="sr-only">(current)</span></a></li>
+                                  {% else %}
+                                    <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                                  {% endifequal %}
+                                {% endfor %}
+                                <li class="page-item">
+                                   {% if list.has_next %}
+                                        <a class="page-link" href="?page={{ list.next_page_number }}">>></a>
+                                    {% endif %}
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+                <div class="col-md-5 d-none pull-right d-md-block pr-0">
+                    <div class="card shadow" style="width: 100%;">
+                        <div class="card-body">
+                            <h2>Review gần đầy</h2>
+                           {% for item in listComment %}
+                            <div class="row">
+                                <div class="col">
+                                    <span class="font-weight-bold">{{item.name}}</span> đã review về công ty <a href="{% url 'viewreview' clinic_id=item.clinic.id %}">{{item.clinic.name}}</a>
+                                    <p class="my-0"><span class=" font-weight-light">{{ item.get_date }}    {% autoescape off %}{{ item.printStar }}{% endautoescape %} </span></p>
+                                    <p>{{item.content}}</p>
+                                </div>
+                            </div>
+                           {% empty %}
+                            <p>Chưa có review nào hết, bạn viết review đi nào hihi!</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</main>
+{% endblock %}

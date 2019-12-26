@@ -1,0 +1,35 @@
+
+<div class="modal fade" id="replyModal" tabindex="-1" role="dialog" aria-labelledby="replyModal"
+     aria-hidden="true">
+    <div class="modal-dialog  mx-md-auto  mr-4 ml-1" role="document">
+        <div class="modal-content mx-auto">
+            <div class="modal-header">
+                <h5 class="modal-title" >Viết review {{clinic.type}} {{clinic.name}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+             <form action="{% url 'reply' %}" method="post">
+            <div class="modal-body">
+
+                    {% csrf_token %}
+                     <div class="form-group">
+                        <label for="inputReplyName">Tên Họ</label>
+                        {{reply_form.name}}
+                    </div>
+                    <div class="form-group">
+                        <label for="inputReplyContent"> Comment <span class="text-danger"> Bắt buộc</span></label>
+                        {{reply_form.content}}
+                    </div>
+                        {{reply_form.status}}
+                    <input type="hidden" value="" name="comment" class="comment-id">
+                   <input type="hidden" name="next" value="{% url 'viewreview' clinic_id=clinic.id %}">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Huỷ bỏ</button>
+                <button class="btn btn-success" type="submit" > Gửi Reply</button>
+            </div>
+                   </form>
+        </div>
+    </div>
+</div>

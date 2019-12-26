@@ -1,0 +1,10 @@
+{% extends "base/base.html" %}
+{% block content %}
+<main class="container mt-5">
+<form action="{% url 'add-clinic' %}" method="post">
+    {% csrf_token %}
+    {{form}}
+    <button type="submit" class="btn btn-success">Gui </button>
+</form>
+</main>
+{% endblock %}
