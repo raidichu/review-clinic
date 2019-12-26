@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 from decouple import config, Csv
-
+import dj_database_url
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -84,14 +84,21 @@ WSGI_APPLICATION = 'reviewclinic.wsgi.application'
 # }
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'djongo',
-        'NAME': 'new_clinic_db',
-        'HOST': 'mongodb+srv://ssklqk:<khoa1712>@cluster0-wkubd.mongodb.net/test?retryWrites=true&w=majority',
-        'USER': 'ssklqk',
-        'PASSWORD': 'khoa1712',
-    }
+    'default': dj_database_url.config(
+        default=config('DATABASE_URL')
+    )
 }
+
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'djongo',
+#         'NAME': 'new_clinic_db',
+#         'HOST': 'mongodb+srv://ssklqk:<khoa1712>@cluster0-wkubd.mongodb.net/test?retryWrites=true&w=majority',
+#         'USER': 'ssklqk',
+#         'PASSWORD': 'khoa1712',
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
