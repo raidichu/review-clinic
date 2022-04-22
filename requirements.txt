@@ -1,7 +1,7 @@
 asgiref==3.2.3
 dataclasses==0.6
 dj-database-url==0.5.0
-Django==2.2.4
+Django==2.2.28
 django-environ==0.4.5
 django-seed==0.1.9
 djongo==1.2.38
